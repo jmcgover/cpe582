@@ -1,0 +1,33 @@
+Name: Jeff McGovern
+
+Paper: Pak, Alexander, and Patrick Paroubek. "Twitter as a Corpus for Sentiment Analysis and Opinion Mining." LREc. Vol. 10. 2010.
+
+1. What is the problem the authors are trying to solve?
+	Training classifiers for sentiment can be a difficult task. Microblogging platforms such as Twitter provide an accessible, public feed of discourse on topics of interest to companies and politicians, among others. Previous methods exist for specific and possibly irrelevant corpora, such as Usenet. 
+
+2. What other approaches or solutions existed at the time that this work was done?
+	Some researchers have use web-blogs as a corpora for sentmient analysis, building Support Vector Machines and Conditional Random Fields classification methods to learn how to classify sentiment. Other researchers have performed sentiment classification on Usenet using Naive Bayes as a classifier. In the latter, smiley faces determined the sentiment of documents in the corpora.
+
+3. What was wrong with the other approaches or solutions?
+	None of the previous literature leveraged Twitter as a corpora. When using Naive Bayes on the (non-Twitter) corpora, the classifier did not perform well when three classes were involved.
+
+4. What is the authors' approach or solution?
+	The authors used the smiley face approach for tagging sentiment and build corpora with three groups with the same number of tweets in each: positive sentiment, negative sentiment, and objective statements (no sentiment). Using Naive Bayes after deciding that it was better than SVM and CRF, they train two Bayes classifiers, one that uses the presence of n-grams and another that uses the part-of-speech distribution. In building their algorithm, they investigated restricting certain n-grams with different techniques.
+
+5. Why is it better than the other approaches or solutions?
+	The authors don't clarify why their algorithm performs better than previous solutions. Restricting n-grams seems to improve the accuracy, but it is not clear if the previous studies used similar mechanisms.
+
+6. How did they test their solution?
+	The authors gathered enough tweets to build a corpora that had an equal number of positive sentiment, negative sentiment, and objective statements. They tested their classifier on the same evaluation set as the ``Twitter sentiment analysis'' paper by Go et. al 2009, experimenting with the different n-gram restriction techniques and measuring the accuracy (like precision), decision (like recall), and F-measure.
+
+7. How does it perform?
+	The algorithm appears to outperform the Go et. al results, but not overly significantly. If one wants to balance decision and accuracy, it performs roughly the same as its positive/negative classifier. However, the authors did note that the previous work had trouble performing well with three classifiers. Since having three classifiers might be useful, this appears to be somewhat significant findings.
+
+8. Why is this work important?
+	Sentiment analysis is very useful for businesses and politicians in understanding public discourse at a large scale. Using public data sources, they can make more informed decisions if they can understand sentiment.
+
+3+ comments/questions
+
+  * What does this algorithm do differently than other papers?
+  * Is there really only one other investigation with twitter sentiment analysis? 
+  * Why were SVM and CRF so bad? How bad were they? 

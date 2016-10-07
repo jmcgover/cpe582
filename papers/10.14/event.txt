@@ -1,0 +1,22 @@
+Name: Jeff McGovern
+Paper: Ananiadou, Sophia, et al. "Event extraction for systems biology by text mining the literature." Trends in biotechnology 28.7 (2010): 381-390.
+1. What is the problem the authors are trying to solve?
+	Systems biology is aided significantly by text mining, specifically event extraction and with the overwhelmingly increasing amount of biological literature being produced, it's necessary to use computational techniques for any biologist to get a grasp on their field. This paper attempts to provide a survey of the current event extraction techniques, explaining their complexity, overhead, benefits, and shortfalls.
+2. What other approaches or solutions existed at the time that this work was done?
+	The authors don't specify any other literature surveys, but emphasize that their focus will be on event extraction with respect to protein-protein interactions. They speak of the general text mining field as lacking when it comes to extracting useful information in this regard, claiming that it is necessary to extract events from text in order to be able to make sense of these types of interactions discussed in literature.
+3. What was wrong with the other approaches or solutions?
+	Text mining tends to be too noisy or restricted to be useful without explicitly recognizing the acknowledging the biological concepts. In order to capture the roles played by molecules, proteins, and other biological structures, more analysis of the linguistic semantics as they relate to biological discourse is necessary. Text mining simply observes and calculates superficial features of the text used, with little regard to the underlying logic and concepts the text describes, making it difficult to extract meaningful events.
+4. What is the authors' approach or solution?
+	In this survey of event extraction, the author describes approaches that use metadata to provide better information retrieval, networks and ontologies to better detect events and entities, and (heavily) annotated corpuses to train algorithms for better recognition. Some algorithms surveyed can leverage smaller, more heavily and accurately annotated corpuses in conjunction with larger, possibly less accurate corpuses to train algorithms. They posit that many of the good methods (namely the annotated corpuses) are good because of how much money, time, effort went into them, but are still flawed because each human participant may disagree somewhat on how to interpret a piece of text. Overall, they unambiguously agree that a deeper understanding of the text is a requirement to useful machine understanding of biological literature.
+5. Why is it better than the other approaches or solutions?
+	By building deeper semantic machine understanding of biological discourse, biologists can avoid having to personally read and understand the entirety of their field of work's literature. Instead, a significant amount of the understanding can be done by a machine at a far faster rate than a human would do.
+6. How did they test their solution?
+	As this is a survey, not testing was explicitly performed.
+7. How does it perform?
+	As a survey, the authors put a lot of effort into justifying their point of view that a deeper understanding of the text is necessary to detect protein-protein interactions from published biological literature. However, the authors seem to lack clarity in their terms, remaining vague on the concept of ``deep.'' Many so-called deep understanding techniques involve neural nets, but it isn't clear if the authors are referencing those, or just using the phrase ``deep parsing'' in a slightly different way. There's also very little discussion of how well any algorithm performs.
+8. Why is this work important?
+	It is important that this survey reveals algorithms that provide more than just a surface statistical analysis of text and discusses algorithms that perform semantic detection.
+3+ comments/questions
+  * How well did the algorithms perform?
+  * What decision process should a researcher go through when trying to employ a protein interaction event extraction algorithm.
+  * What criteria define a good event detection algorithm?

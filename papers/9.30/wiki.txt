@@ -1,0 +1,33 @@
+Name: Jeff McGovern
+
+Paper: Hogenboom, Frederik, et al. "An overview of event extraction from text." Workshop on Detection, Representation, and Exploitation of Events in the Semantic Web (DeRiVE 2011) at Tenth International Semantic Web Conference (ISWC 2011). Vol. 779. 2011.
+
+1. What is the problem the authors are trying to solve?
+	Wikipedia is a vast, rich source of data that can take an inordinate amount of effort to scrape and parse. The authors of Wikipedia Miner are attempting to prevent researchers from having to reinvent the wheel whenever they desire to leverage Wikipedia as a data source when exploring cutting edge algorithms and data science techniques.
+
+2. What other approaches or solutions existed at the time that this work was done?
+	Approaches to this problem come in three flavors: curated secondary data structures provided by researchers; custom-rolled techniques built from scratch; and shared software libraries. Freebase and Yago fall under the first category and, assuredly, plenty of approaches exist in the second. For shared libraries, there are the Java Wikipedia Library, Wikipedia-Similarity, and the WikiPrep PERL script.
+
+3. What was wrong with the other approaches or solutions?
+	Java Wikipedia Library shares many features in common with Wikipedia Miner in addition to finer-grained article parsing, but fails to incorporate the scaled dump processing, machine learning techniques, or XML-based web services. Wikipedia-Similarity provides hooks straight into MediaWiki to handle data collection, but only collects information for semantic relatedness and the measure is less accurate.
+
+4. What is the authors' approach or solution?
+	By building a modular, highly scalable scraping and parsing library, the researchers are able to add much more information and analysis to the data from Wikipedia. In doing so, they built many machine learning algorithms into their library to inform further analysis by other researchers
+
+5. Why is it better than the other approaches or solutions?
+	Other researchers can straightforwardly incorporate this library into their codebase and spend more time focusing on the analysis and less on the technical issues of parsing. Researchers can also build their own custom versions of the analytical tools that Wikipedia Miner provides.
+
+6. How did they test their solution?
+	The authors tested mainly two pieces, the performance of the code and the accuracy of the machine learning techniques. With performance, they investigated time and memory usage while calculating various corpus-wide analyses. For the accuracy, they validated the results of their semantic relatedness and annotation features by calculating the precision, recall, and F-measure.
+
+7. How does it perform?
+	From a performance standpoint, the ability to use a cluster of relatively low cost computers (assuming ``two 2.66 Ghz processors'' simply means a dual core processor) to speed up computation with reliable, linear scaling and no necessary intervention from the researchers who want to perform the analysis is a great benefit. The machine learning algorithms seem to perform relatively well with high precision and recall, but there doesn't seem to be much that's groundbreaking with them.
+
+8. Why is this work important?
+	Enabling researchers to do what they do best without being hindered by limited time, money, and grad students is incredibly beneficial. Wikipedia is a constantly updating source of rich information and reinventing the wheel every time a new analytical technique comes out is a hindrance to the gathering of new knowledge
+
+3+ comments/questions
+
+  * Are they still updating it?
+  * Why was there so much emphasis on the machine learning techniques when the point of the paper is the software library?
+  * What exactly were the kind of computers they used? 2.5 hours is a reasonable amount of time, but you need 30 computers for that? Is this library _really_ enabling researchers?

@@ -1,0 +1,14 @@
+Name: Jeff McGovern
+Paper: 
+1. What is the problem the authors are trying to solve?
+2. What other approaches or solutions existed at the time that this work was done?
+3. What was wrong with the other approaches or solutions?
+4. What is the authors' approach or solution?
+5. Why is it better than the other approaches or solutions?
+6. How did they test their solution?
+7. How does it perform?
+8. Why is this work important?
+3+ comments/questions
+  * 
+  * 
+  * 

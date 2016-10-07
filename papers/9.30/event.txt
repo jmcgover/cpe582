@@ -1,0 +1,33 @@
+Name: Jeff McGovern
+
+Paper: Milne, David, and Ian H. Witten. "An open-source toolkit for mining Wikipedia." Artificial Intelligence 194 (2013): 222-239.
+
+1. What is the problem the authors are trying to solve?
+	The authors recognize that there is a dearth in high-level surveys on event detection in text and asserts taht this paper can help by reviewing existing approaches to event extraction.
+
+2. What other approaches or solutions existed at the time that this work was done?
+	The authors fail to cite any works related to surveying the current state of event extraction from text. A (possibly amateur) search of relevant literature shows that there were efforts to provide surveys on informations extraction in 1999 and 2004, which is roughly 10 years prior to when this paper was published (2011), but those papers might not be quite as relevant to the topic of event extraction.
+
+3. What was wrong with the other approaches or solutions?
+	The authors make no mentioned of problems with other approaches, other than the fact that they do not exist. It it possible that the level of approachability by non-experts in the field of event extraction from text is an issue, since the authors emphasize the high-level nature of the paper, or that other surveys do not provide a discussion on how to decide on one technique over another.
+
+4. What is the authors' approach or solution?
+	In this paper, the author presents 17 bodies of work and a high-level description of each with respect to the techniques employed. The techniques employed are segmented into three groups, data-drive, knowledge-drive, and hybrid approaches.
+
+5. Why is it better than the other approaches or solutions?
+	The mere existence of this paper as an up to date survey is beneficial to the literature and the approachability of its discussion by interested individuals with minimal expertise.
+
+6. How did they test their solution?
+	The authors never explain any testing methods employed.
+
+7. How does it perform?
+	It is unclear how this paper compares to similar papers, since the authors do not mention any similar papers. From a personal standpoint, I find that the discussion and explanations would benefit from more detail.
+
+8. Why is this work important?
+	This paper provides a starting point to investigate techniques for event extraction that interested researchers of any expertise can digest.
+
+3+ comments/questions
+
+  * Are there actually no other surveys?
+  * How does event extraction differ from information extraction as a whole? Answering this question can be especially useful for researchers with less expertise.
+  * Would a discussion on platforms for extracting text, i.e. prebuilt software packages for event extraction, be useful and relevant to this paper?
