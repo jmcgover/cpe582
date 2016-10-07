@@ -73,11 +73,20 @@ def problem_2():
     assert(compare_two_lists(text1, text2) == True)
 
     # Modify Random Element
-    text1[random.randint(0, len(text1) - 1)][1] = "PROBLEM 2: VERY OBVIOUS REPLACEMENT"
+    try:
+        text1[random.randint(0, len(text1) - 1)][1] = "Morty"
+    except TypeError as e:
+        print("Caught a TypeError, because we tried to assign something to a character in a str")
 
-    # Show After
-    print('After')
-    assert(compare_two_lists(text1, text2) == False)
+    return
+
+def problem_3():
+    # Load Python's deepcopy() function (i.e. from copy import deepcopy),
+    # consult its documentation, and test that it makes a fresh copy of any
+    # object.
+
+    print("Beginning Problem 4.11 Part 3")
+    from copy import deepcopy
     return
 
 def compare_two_lists(a, b, verbose = True):
@@ -96,6 +105,8 @@ def main():
     problem_1()
     print()
     problem_2()
+    print()
+    problem_3()
     return 0
 
 if __name__ == '__main__':
