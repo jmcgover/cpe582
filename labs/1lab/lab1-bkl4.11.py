@@ -1,6 +1,6 @@
 # Jeff McGovern
 # CPE 582-01
-# Lab 1: BKL Chapter 4, Exercise 10
+# Lab 1: BKL Chapter 4, Exercise 11
 # Friday, October 7, 2016, 11:30 PM
 
 import os
@@ -32,7 +32,7 @@ def problem_0():
     assert(compare_two_lists(sent1, sent2) == True)
 
     # Modify Random Element
-    sent1[random.randint(0, len(sent1))] = "PROBLEM 0: VERY OBVIOUS REPLACEMENT"
+    sent1[random.randint(0, len(sent1) - 1)] = "PROBLEM 0: VERY OBVIOUS REPLACEMENT"
 
     # Show After
     print('After')
@@ -87,6 +87,20 @@ def problem_3():
 
     print("Beginning Problem 4.11 Part 3")
     from copy import deepcopy
+    list1 = random.sample(TEXT, ARB_NUM)
+
+    # Perform Deep Copy
+    print("Performing Deep Copy")
+    list2 = deepcopy(list1)
+
+    # Modify Random Element
+    print("Modifying Random Element")
+    list1[random.randint(0, len(list1) - 1)] = "PROBLEM 3: VERY OBVIOUS MODIFICATION"
+
+    # Show After
+    print('After')
+    assert(compare_two_lists(list1, list2) == False)
+
     return
 
 def compare_two_lists(a, b, verbose = True):
