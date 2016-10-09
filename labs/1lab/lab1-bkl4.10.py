@@ -10,6 +10,17 @@ import sys
 # which uses the cmp comparison function on word lengths.
 
 import nltk
+from nltk.corpus import webtext
+from nltk.tokenize import word_tokenize
+from nltk.tokenize import regexp_tokenize
+import random
+from pprint import pprint
+from collections import defaultdict
+
+ARB_NUM = 50
+CORPUS = webtext
+TEXT = word_tokenize(CORPUS.raw(random.choice(CORPUS.fileids())))
+SENTS = CORPUS.sents(random.choice(CORPUS.fileids()))
 
 def cmp_len(a, b):
     # There is no cmp function in Python3:

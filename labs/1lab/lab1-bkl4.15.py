@@ -31,9 +31,11 @@ def count_words_in_sentence(sent):
       word_counts[word.lower()] += 1
    return word_counts
 
-SENT = "The quick brown fox jumps over the lazy dog."
+SENT = random.choice(SENTS)
 def main():
-   word_counts = count_words_in_sentence(SENT)
+   test = ' '.join(SENT)
+   print(test)
+   word_counts = count_words_in_sentence(test)
    for word in sorted(word_counts):
       print(word, ":", word_counts[word])
    return 0

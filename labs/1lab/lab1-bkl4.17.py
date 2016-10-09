@@ -35,6 +35,7 @@ def shorten(word_list, n):
    # Find Most Frequent
    n_most_freq = set(sorted_counts[-n:])
    assert(len(n_most_freq))
+   print('OMITTING {} MOST FREQUENT:'.format(n))
    for bleh in sorted_counts[-n:]:
       print('FREQUENT:{}:{}'.format(word_counts[bleh], bleh))
 
@@ -46,9 +47,10 @@ def shorten(word_list, n):
    return shortened_text
 
 def main():
-   print(textwrap.fill(' '.join(TEXT[100:])))
+   num_to_use = 200
+   print(textwrap.fill(' '.join(TEXT[:num_to_use])))
    print("Shortening text....")
-   shortened = shorten(TEXT[100:], 50)
+   shortened = shorten(TEXT[:num_to_use], 50)
    print(textwrap.fill(' '.join(shortened)))
    return 0
 

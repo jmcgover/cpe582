@@ -32,13 +32,16 @@ def novel10(text):
          last10.add(word)
 
    novel_words = last10.difference(first90)
+   print("Unique 10% tail:")
    for novel_word in novel_words:
       assert(novel_word not in first90)
       print(novel_word)
    return novel_words
 
 def main():
-   novel10(CORPUS.raw(random.choice(CORPUS.fileids())))
+   fileid = random.choice(CORPUS.fileids())
+   print('USING {} FROM {}'.format(fileid, 'webtext'))
+   novel10(CORPUS.raw(fileid))
    return 0
 
 if __name__ == '__main__':
