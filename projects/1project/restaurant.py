@@ -23,7 +23,8 @@ LOGGER.setLevel(logging.WARNING)
 # Natual Language Processing
 import nltk
 from bs4 import BeautifulSoup
-from pprint import pprint
+from pprint import pformat
+import re
 
 # Maths
 import random
@@ -49,8 +50,9 @@ def enter_debug_mode():
 
 TEST_DIR = 'test'
 TRAIN_DIR = 'training'
-EXPECTED_DIRS_TEST_TRAIN = (TEST_DIR, TRAIN_DIR)
-EXPECTED_DIRS_REVIEW = ('Review1', 'Review2', 'Review3')
+REVIEW_DIR = 'Review[123]';
+REVIEW_DIR_REGEX = re.compile(REVIEW_DIR)
+DIR_REGEX = re.compile('{}|{}|{}'.format(TEST_DIR, TRAIN_DIR, REVIEW_DIR))
 def extract_dirs(path):
     """
         Validate the directory exitence and structure
@@ -68,28 +70,29 @@ def extract_dirs(path):
     check_dir(path, True)
 
     # Check Structure
-    test_train_dirs = {}
-    review_dirs = {}
+    discovered_dirs = {}
     for filename in os.listdir(path):
-        print(filename)
+        LOGGER.debug(filename)
         subdir_path = os.path.join(path, filename)
-        if filename in EXPECTED_DIRS_TEST_TRAIN and os.path.isdir(subdir_path):
-            test_train_dirs[filename] = subdir_path
-        if filename in EXPECTED_DIRS_REVIEW and os.path.isdir(subdir_path):
-            review_dirs[filename] = subdir_path
+        if DIR_REGEX.match(filename) and os.path.isdir(subdir_path):
+            discovered_dirs[filename] = subdir_path
 
-    if all([dir in test_train_dirs for dir in EXPECTED_DIRS_TEST_TRAIN]):
+    test_train_dirs = [discovered_dirs[dir] for dir in (TEST_DIR, TRAIN_DIR) if dir in discovered_dirs]
+    review_dirs = [discovered_dirs[dir] for dir in discovered_dirs if REVIEW_DIR_REGEX.match(dir)]
+    LOGGER.debug('Test and Training Directories:{}'.format(test_train_dirs))
+    LOGGER.debug('Review Directories:{}'.format(review_dirs))
+    if all([dir in discovered_dirs for dir in (TEST_DIR, TRAIN_DIR)]):
         # Test Train
         LOGGER.debug('test and training folder exist')
-        return [v for k,v in test_train_dirs.items()]
-    elif all([dir in review_dirs for dir in EXPECTED_DIRS_REVIEW]):
+        return test_train_dirs
+    elif len(review_dirs):
         # Reviews
-        LOGGER.debug('all review folders exist')
-        return [v for k,v in review_dirs.items()]
+        LOGGER.debug('review folders exist: {}'.format(review_dirs))
+        return review_dirs
     else:
         # Nothing is correct
-        [check_dir(os.path.join(path, name), False) for name in EXPECTED_DIRS_TEST_TRAIN]
-        [check_dir(os.path.join(path, name), False) for name in EXPECTED_DIRS_REVIEW]
+        [check_dir(os.path.join(path, name), False) for name in (TEST_DIR, TRAIN_DIR)]
+        LOGGER.error('Could not find any directory of the style \'{}\''.format(REVIEW_DIR))
         sys.exit(errno.ENOTDIR)
     return None
 
@@ -108,40 +111,67 @@ def check_dir(path, exit_program):
             return False
     return True
 
-def get_lowest_files(dir):
+def get_lowest_filenames(dir):
     lowest_files = []
-    for root, dirs, files in os.walk(str(dir)):
-        for file in files:
-            full_path = os.path.join(root, file)
+    for root, dirs, filenames in os.walk(str(dir)):
+        for filename in filenames:
+            full_path = os.path.join(root, filename)
             lowest_files.append(full_path)
     return lowest_files
 
-def build_datasets(path_string):
+class Review(object):
+    FOOD_STR    = 'FOOD'
+    VENUE_STR   = 'VENUE'
+    SERVICE_STR = 'SERVICE'
+    OVERALL_STR = 'OVERALL'
+    FOOD_NDX    = 0
+    VENUE_NDX   = 1
+    SERVICE_NDX = 2
+    OVERALL_NDX = 3
+    def __init__(self, filename):
+        self.author = None
+        self.restaurant = None
+        self.address = None
+        self.city = None
+        self.paragraphs = []
+        self.ratings = []
+        self.raw = None
+
+        # Open and Parse
+        soup = None
+        LOGGER.debug("Opening %s...", filename)
+        with open(filename, 'r') as file:
+            LOGGER.debug("BeautifulSouping...")
+            soup = BeautifulSoup(file, 'lxml')
+        LOGGER.debug('Prettifying...')
+        self.raw = soup.prettify()
+        return
+    def __str__(self):
+        return self.raw
+
+def build_reviews(filenames):
+    reviews = []
+    for filename in filenames:
+        LOGGER.debug('PARSING:%s', filename)
+        try:
+            new_review = Review(filename)
+            reviews.append(new_review)
+            print(new_review)
+        except Exception as e:
+            LOGGER.warning('Failed to parse "%s": %s', filename, e)
+    return reviews
+
+def build_datasets(dir_path):
     # Validate and extract dirs
-    folders = extract_dirs(path_string)
+    folders = extract_dirs(dir_path)
+    LOGGER.debug('DISCOVERED FOLDERS:{}'.format(folders))
     files = {}
     for folder in folders:
-        files[folder] = get_lowest_files(folder)
-    pprint(folders)
-    all_files = []
+        files[folder] = get_lowest_filenames(folder)
+    LOGGER.debug('DISCOVERED FILES:{}'.format(pformat(files)))
     for folder in files:
-        all_files.extend(files[folder])
-    pprint(all_files)
-    for filepath in all_files:
-        if 'McGovern' in str(filepath):
-            soup = None
-            with open(filepath, 'r') as file:
-                soup = BeautifulSoup(file, 'lxml')
-            print(soup.prettify())
-            print(soup.text)
-    soup = None
-    with open(random.choice(all_files), 'r') as file:
-        soup = BeautifulSoup(file, 'lxml')
-    print(soup.prettify())
-    print('*' * 40)
-    print(soup.text)
+        build_reviews(files[folder])
     return
-
 
 def main():
     arg_parser = get_arg_parser()
