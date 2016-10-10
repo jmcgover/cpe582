@@ -6,7 +6,6 @@
 # File System
 import os
 import stat
-from pathlib import Path
 
 # System
 import sys
@@ -52,7 +51,7 @@ TEST_DIR = 'test'
 TRAIN_DIR = 'training'
 EXPECTED_DIRS_TEST_TRAIN = (TEST_DIR, TRAIN_DIR)
 EXPECTED_DIRS_REVIEW = ('Review1', 'Review2', 'Review3')
-def extract_dirs(path_string):
+def extract_dirs(path):
     """
         Validate the directory exitence and structure
 
@@ -64,7 +63,6 @@ def extract_dirs(path_string):
     """
 
     # Python3's OO way of using paths
-    path = Path(path_string)
 
     # Validate Directory
     check_dir(path, True)
@@ -72,11 +70,13 @@ def extract_dirs(path_string):
     # Check Structure
     test_train_dirs = {}
     review_dirs = {}
-    for file in path.iterdir():
-        if file.name in EXPECTED_DIRS_TEST_TRAIN and file.is_dir():
-            test_train_dirs[file.name] = file
-        if file.name in EXPECTED_DIRS_REVIEW and file.is_dir():
-            review_dirs[file.name] = file
+    for filename in os.listdir(path):
+        print(filename)
+        subdir_path = os.path.join(path, filename)
+        if filename in EXPECTED_DIRS_TEST_TRAIN and os.path.isdir(subdir_path):
+            test_train_dirs[filename] = subdir_path
+        if filename in EXPECTED_DIRS_REVIEW and os.path.isdir(subdir_path):
+            review_dirs[filename] = subdir_path
 
     if all([dir in test_train_dirs for dir in EXPECTED_DIRS_TEST_TRAIN]):
         # Test Train
@@ -88,19 +88,19 @@ def extract_dirs(path_string):
         return [v for k,v in review_dirs.items()]
     else:
         # Nothing is correct
-        [check_dir(path / name, False) for name in EXPECTED_DIRS_TEST_TRAIN]
-        [check_dir(path / name, False) for name in EXPECTED_DIRS_REVIEW]
+        [check_dir(os.path.join(path, name), False) for name in EXPECTED_DIRS_TEST_TRAIN]
+        [check_dir(os.path.join(path, name), False) for name in EXPECTED_DIRS_REVIEW]
         sys.exit(errno.ENOTDIR)
     return None
 
 def check_dir(path, exit_program):
-    if not path.exists():
+    if not os.path.exists(path):
         LOGGER.error("Directory '%s' does not exist", path)
         if exit_program:
             sys.exit(errno.ENOENT)
         else:
             return False
-    if not path.is_dir():
+    if not os.path.isdir(path):
         LOGGER.error("Directory '%s' is not a directory", path)
         if exit_program:
             sys.exit(errno.ENOTDIR)
@@ -113,7 +113,7 @@ def get_lowest_files(dir):
     for root, dirs, files in os.walk(str(dir)):
         for file in files:
             full_path = os.path.join(root, file)
-            lowest_files.append(Path(full_path))
+            lowest_files.append(full_path)
     return lowest_files
 
 def build_datasets(path_string):
@@ -121,7 +121,7 @@ def build_datasets(path_string):
     folders = extract_dirs(path_string)
     files = {}
     for folder in folders:
-        files[folder.name] = get_lowest_files(folder)
+        files[folder] = get_lowest_files(folder)
     pprint(folders)
     all_files = []
     for folder in files:
@@ -130,12 +130,12 @@ def build_datasets(path_string):
     for filepath in all_files:
         if 'McGovern' in str(filepath):
             soup = None
-            with filepath.open() as file:
+            with open(filepath, 'r') as file:
                 soup = BeautifulSoup(file, 'lxml')
             print(soup.prettify())
             print(soup.text)
     soup = None
-    with random.choice(all_files).open() as file:
+    with open(random.choice(all_files), 'r') as file:
         soup = BeautifulSoup(file, 'lxml')
     print(soup.prettify())
     print('*' * 40)
