@@ -145,6 +145,8 @@ class Review(object):
             soup = BeautifulSoup(file, 'lxml')
         LOGGER.debug('Prettifying...')
         self.raw = soup.prettify()
+        LOGGER.debug('Getting paragraphs...')
+        self.paras = soup.find_all('p')
         return
     def __str__(self):
         return self.raw
@@ -156,7 +158,8 @@ def build_reviews(filenames):
         try:
             new_review = Review(filename)
             reviews.append(new_review)
-            print(new_review)
+            LOGGER.debug(new_review)
+            LOGGER.debug('PARAS:%s',pformat(new_review.paras))
         except Exception as e:
             LOGGER.warning('Failed to parse "%s": %s', filename, e)
     return reviews
@@ -171,7 +174,9 @@ def build_datasets(dir_path):
     LOGGER.debug('DISCOVERED FILES:{}'.format(pformat(files)))
     for folder in files:
         build_reviews(files[folder])
-    return
+    test = None
+    train = None
+    return test, train
 
 def main():
     arg_parser = get_arg_parser()
@@ -179,7 +184,7 @@ def main():
     if args.debug == True:
         enter_debug_mode()
     data_dir = args.data_dir
-    result = build_datasets(data_dir)
+    test, train = build_datasets(data_dir)
     return 0
 
 if __name__ == '__main__':
