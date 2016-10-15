@@ -1,0 +1,22 @@
+Name: Jeff McGovern
+Paper: Hasan, Kazi Saidul, and Vincent Ng. "Weakly supervised part-of-speech tagging for morphologically-rich, resource-scarce languages." Proceedings of the 12th Conference of the European Chapter of the Association for Computational Linguistics. Association for Computational Linguistics, 2009.
+1. What is the problem the authors are trying to solve?
+The authors are attempting to solve the difficult task of tagging parts of speech for words in a language that has scarce resources. Many techniques exist that assume the use of a perfect POS lexicon, but not many languages have the luxury of that resource.
+2. What other approaches or solutions existed at the time that this work was done?
+Unsupervised approaches that already existed include methods that use syntactic clustering, contrastive estimation in the movement of probability mass to positive examples, and prototype examples. The paper explains more in depth work done by Goldwater and Griffiths that uses a fully Bayesian tagging framework over possible parameter values.
+3. What was wrong with the other approaches or solutions?
+Many unsupervised approaches to POS tagging are only slightly unsupervised, making assumptions in the building of the classifier that are very language specific, or built from detailed corpora already built for the language. Building these resources is challenging and usually imperfect, which the algorithms don't always account for.
+4. What is the authors' approach or solution?
+The researchers employ a fully Bayesian approach that integrates over the set of all possible tag transition distributions and output distributions, instead of limiting it to a particular set. Using this concept, they train a trigram HMM and add extensions that emit the suffixes of word to help with POS tagging and add discriminative prediction using the distributions.
+5. Why is it better than the other approaches or solutions?
+Their approach assumes a more realistic lexicon, small and imperfectly compiled. It also uses morphology from the language to inform the tagging process, resulting in more accurate tagging.
+6. How did they test their solution?
+The researchers trained using a manually tagged IIIT Hyderabad POS tagset. They investigated training at different rates, building a learning curve to compare against other algorithms.
+7. How does it perform?
+It appears to perform well, though the reearchers did not compare to humans.
+8. Why is this work important?
+Much NLP work has been done with the English language, but there are many languages with a need for computational natural language understanding.
+3+ comments/questions
+  * How can we exploit morphological features of English?
+  * How semi-supervised can we get with this? How small can our POS tagset be?
+  * Can this concept work in other areas of NLP?

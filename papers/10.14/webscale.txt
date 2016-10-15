@@ -1,0 +1,22 @@
+Name: Jeff McGovern
+Paper: Bergsma, Shane, Dekang Lin, and Randy Goebel. "Web-Scale N-gram Models for Lexical Disambiguation." IJCAI. Vol. 9. 2009.
+1. What is the problem the authors are trying to solve?
+The researchers are trying to use very large amounts of text to more accurately disambiguate lexical features using n gram approaches. Web scale appears to mean using corpora on the scale of billions of words or more, precompiled from the internet.
+2. What other approaches or solutions existed at the time that this work was done?
+Other approaches might search the internet for text to train with looking at specific sequence counts for machine translation. Others use trigram models and web scale corpora for context-specific spelling correction.
+3. What was wrong with the other approaches or solutions?
+Some approaches may use web-scale corpora, but do not incorporate sentence level features. Many approaches also do not build semantic labels from the corpora they train on.
+4. What is the authors' approach or solution?
+The authors wish to assign labels to sequences of words based on their context. They investigate 4 different approaches, SuperLM, SumLM, Trigram, and RatioLM. SuperLM trains a supervised classifier to choose a set of weights for each label that is the highest. SumLM scores each filler by summing the logcounts of all of the context patterns that use the filler. Trigram uses fillers where the word is in the middle of a trigram. RatioLM looks at the ratio between highest and second highest filler counts.
+5. Why is it better than the other approaches or solutions?
+These approaches use a very large corpus and focuses on context of the word. Previous approaches did not incorporate as much context to the words that these approaches did.
+6. How did they test their solution?
+Researchers looked at the accuracy of the classified word, building a learning curve of each to compare to. They also investigated the coverage of the classifiers.
+7. How does it perform?
+The algorithms investigated appear to have high accuracy when the coverage is low, but the accuracy decreases to around 90% for the SuperLM in French, 80% for SuperLM, and as low as 58% for the Trigram model as coverage reaches 100%.
+8. Why is this work important?
+Building lexical models for large amounts of text is hopefully a straightforward way to accurately model a language. The internet has made it easy to gather large amounts of data for a language and building algorithms that can effectively use them is important.
+3+ comments/questions
+  * Webscale is never defined.
+  * How clean does the dataset have to be?
+  * Why can't we use this on smaller datasets?

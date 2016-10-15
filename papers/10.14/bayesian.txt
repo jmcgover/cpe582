@@ -1,0 +1,21 @@
+Name: Jeff McGovern
+Paper: Bamman, David, Ted Underwood, and Noah A. Smith. "A Bayesian Mixed Effects Model of Literary Character." ACL (1). 2014.
+1. What is the problem the authors are trying to solve?
+Researchers are trying to model characters in text from a computational methodology. They want to leverage characteristics unique to the character and the writer of the character, as well as any period-level latent features that might exist for the author and the characters written at the time.
+2. What other approaches or solutions existed at the time that this work was done?
+Many approaches try to model interactions between characters in a social network sort of way. One approach differentiates between characters using metadata from the book itself.
+3. What was wrong with the other approaches or solutions?
+Fundamental to this problem is the definition of a character, which is a challenge from a non-computational standpoint. Many literary critics differ on how to define character even when hmans are performing the determination. As a result, computational approaches tend to look at only specific attributes that may be semantically capturable between characters, or very explicitly use metadata to inform the decisions (which we don't always need as humans).
+4. What is the authors' approach or solution?
+Unsupervised clustering. Specifically they build an agglomerative clustering mechanic to discover characters.
+5. Why is it better than the other approaches or solutions?
+They look to differentiate between types of characters of the same author, between different authors, etc. using just text/document features.
+6. How did they test their solution?
+Using a corpora of books from 1700-1899, they sought to answer several hypotheses made by a literary scholar.
+7. How does it perform?
+They are able to differentiate between cha
+8. Why is this work important?
+3+ comments/questions
+  * Why didn't they use contemporary works?
+  * What exactly do the characters look like in the model?
+  * What effects might the Gutenberg filtering have on the character models?
