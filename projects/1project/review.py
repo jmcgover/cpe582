@@ -45,20 +45,146 @@ class Review(object):
         self.ratings = []
         self.raw = None
 
-        # Open and Parse
+        # Open and BeautifulSoup
         soup = None
         LOGGER.debug("Opening %s...", filename)
         with open(filename, 'r') as file:
             LOGGER.debug("BeautifulSouping...")
             soup = BeautifulSoup(file, 'lxml')
+
+        # EXTRACT PARAGRAPHS
+        LOGGER.debug('Replacing br\'s...')
+        for br in soup.find_all('br'):
+            br.replace_with('\n')
+
+        LOGGER.debug('Getting body...')
+        body = soup.find('body')
+
+        raw_paragraphs = []
+        LOGGER.debug('Getting paragraphs...')
+        if 'Gavin Scott' in self.path and 'Review1' in self.path:
+            LOGGER.debug('Using <span> on Gavin\'s Review1...')
+            soup_paras = body.find_all('span')
+        elif 'Daniel Kauffman' in self.path and 'Review2' in self.path:
+            LOGGER.debug('Using <span> on Daniel\'s Review2...')
+            soup_paras = body.find_all('span')
+        elif 'Daniel Kauffman' in self.path and 'Review3' in self.path:
+            LOGGER.debug('Using <span> on Daniel\'s Review3...')
+            soup_paras = body.find_all('span')
+        else:
+            LOGGER.debug('Using <p> to parse paragraphs...')
+            soup_paras = body.find_all('p')
+        if 'Jonathan Sleep' in self.path and 'Review3' in self.path:
+            for p in soup_paras:
+                LOGGER.debug('Found a paragraph...')
+                raw_paragraphs.append(p.get_text())
+        else:
+            if soup_paras:
+                for p in soup_paras:
+                    LOGGER.debug('Found a paragraph...')
+                    raw_paragraphs.extend(p.get_text().split('\n'))
+            else:
+                LOGGER.debug('Could not find paragraphs...')
+                raw_paragraphs.extend(body.get_text().split('\n'))
+        LOGGER.debug('RAW_PARAGRAPHS:%s', raw_paragraphs)
+        paragraphs = []
+        for p in raw_paragraphs:
+            if re.findall('WRITTEN REVIEW:[^\n]+\w+',p):
+                LOGGER.debug('FOUND:%s', re.findall('WRITTEN REVIEW:[^\n]+\w+',p))
+                paragraphs.extend(('WRITTEN REVIEW:', p.replace('WRITTEN REVIEW:', '').strip()))
+            else:
+                LOGGER.debug('APPENDING RAW:%s', p)
+                paragraphs.append(p)
+        if 'Jon Doughty' in self.path:
+            LOGGER.debug('Collapsing Jon\'s paragraphs...')
+            self.paras = Review.collapse_paragraphs(paragraphs)
+        elif 'Christian Durst' in self.path and 'Review1' in self.path:
+            LOGGER.debug('Collapsing Skylar\'s Review1 paragraphs...')
+            self.paras = Review.collapse_paragraphs(paragraphs)
+        elif 'Joseph Wilson' in self.path and 'Review1' in self.path:
+            LOGGER.debug('Collapsing Joey\'s Review1 paragraphs...')
+            self.paras = Review.collapse_paragraphs(paragraphs)
+        elif 'Ryan Smith' in self.path and 'Review2' in self.path:
+            LOGGER.debug('Collapsing Ryan\'s Review2 paragraphs...')
+            self.paras = Review.collapse_paragraphs(paragraphs, '')
+        elif 'Christian Durst' in self.path and 'Review3' in self.path:
+            LOGGER.debug('Collapsing Skylar\'s Review3 paragraphs...')
+            self.paras = Review.collapse_paragraphs(paragraphs, all=True)
+        else:
+            self.paras = [p for p in paragraphs if p]
+
+        if 'Justin Postigo' in self.path and 'Review3' in self.path:
+            LOGGER.debug('Appending empty paragraph to Justin\'s Review3...')
+            self.paras.append('')
+        if 'Samuel Lakes' in self.path and 'Review2' in self.path:
+            LOGGER.debug('Fixing CITY in Sam\'s Review2...')
+            self.paras = self.paras[0:2] \
+                + [self.paras[2].replace(', San Luis Obispo, CA 93405','')]\
+                + ['CITY: San Luis Obispo'] \
+                + self.paras[3:]
+        if 'Ivan Pachev' in self.path and 'Review2' in self.path:
+            LOGGER.debug('Combining some paragraphs of Ivan\'s Review2...')
+            self.paras[11] = ' '.join(self.paras[11:13])
+            self.paras[12] = ' '.join(self.paras[14:])
+            del self.paras[13:]
+
+
         LOGGER.debug('Prettifying...')
         self.raw = soup.prettify()
-        LOGGER.debug('Getting paragraphs...')
-        self.paras = soup.find_all('p')
-        self.newlines = soup.find_all('br')
+        LOGGER.debug('PRETTY:%s', self.raw)
+        [LOGGER.debug('PARAGRAPH:%d:%s', i, p) for i,p in enumerate(self.paras)]
+        if len(self.paras) != 13:
+            LOGGER.error('Parsed %d paragraphs for %s',len(self.paras),self.path)
+            [LOGGER.error('PARAGRAPH:%d:%s', i, p) for i,p in enumerate(self.paras)]
+        else:
+            LOGGER.debug('Parsed %d paragraphs for %s',len(self.paras),self.path)
+        assert(len(self.paras) == 13)
         return
     def __str__(self):
         return self.raw
+    @staticmethod
+    def collapse_paragraphs(paragraphs, text_delimiter = ' ', all=False):
+        collapsed_paras = []
+        if all:
+            LOGGER.debug('Collapsing all...')
+            review_para = ''
+            for j in range(len(paragraphs)):
+                LOGGER.debug('INSPECTING:%d:%s',j,paragraphs[j])
+                if paragraphs[j]:
+                    review_para += paragraphs[j] + text_delimiter
+                elif review_para:
+                    LOGGER.debug('ADDING:%s', review_para)
+                    collapsed_paras.append(review_para)
+                    review_para = ''
+                else:
+                    LOGGER.debug('SKIPPING:%s', paragraphs[j])
+            if review_para:
+                collapsed_paras.append(review_para)
+        else:
+            for i,p in enumerate(paragraphs):
+                LOGGER.debug('%d:%s',i,p)
+                if 'WRITTEN REVIEW' in p:
+                    collapsed_paras.append(p)
+                    review_para = ''
+                    for j in range(i + 1, len(paragraphs)):
+                        LOGGER.debug('INSPECTING:%d:%s',j,paragraphs[j])
+                        if paragraphs[j]:
+                            review_para += paragraphs[j] + text_delimiter
+                        elif review_para:
+                            LOGGER.debug('ADDING:%s', review_para)
+                            collapsed_paras.append(review_para)
+                            review_para = ''
+                        else:
+                            LOGGER.debug('SKIPPING:%s', paragraphs[j])
+                    if review_para:
+                        collapsed_paras.append(review_para)
+                    break
+                elif p:
+                    collapsed_paras.append(p)
+        if len(collapsed_paras) > 13:
+            collapsed_paras[12] = ''.join(collapsed_paras[12:])
+            del collapsed_paras[13:]
+        return collapsed_paras
 
 class ReviewDataset(object):
     TEST_DIR = 'test'
@@ -83,11 +209,9 @@ class ReviewDataset(object):
             new_reviews = ReviewDataset.build_reviews(filenames[folder])
             all_reviews.extend(new_reviews)
             reviews[folder] = new_reviews
-        for review in sorted(all_reviews, key=lambda x: len(x.paras), reverse = True):
-            paragraphs = review.paras
-            LOGGER.debug('%2d: %s', len(paragraphs), review.path)
-            for i, p in enumerate(paragraphs):
-                LOGGER.debug('%d:%s', i, p.raw)
+        for review in sorted(all_reviews, reverse=True, key=lambda x: len(x.paras)):
+            LOGGER.debug('%s PARAGRAPHS: %d', review.path, len(review.paras))
+            [LOGGER.debug('%d:%s', i, para) for i,para in enumerate(review.paras)]
         LOGGER.debug('Count: %d', len(all_reviews))
 
     @staticmethod

@@ -41,12 +41,15 @@ def get_arg_parser():
     parser.add_argument('-d', '--debug',
             action='store_true', default=False,
             help='enters debug logging mode, adding details to the log message')
+    parser.add_argument('-t', '--test',
+            nargs = '?',
+            help='test the review parsing of a single file')
     return parser
 
 def enter_debug_mode():
     print("FUCK")
     verbose_handler = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
+    formatter = logging.Formatter('%(asctime)s:%(funcName)s:%(lineno)s:%(levelname)s:%(message)s')
     verbose_handler.setFormatter(formatter)
     LOGGER.removeHandler(HANDLER)
     LOGGER.addHandler(verbose_handler)
@@ -59,7 +62,16 @@ def main():
     if args.debug == True:
         enter_debug_mode()
     data_dir = args.data_dir
-    dataset = ReviewDataset(data_dir)
+    if args.test:
+        LOGGER.info('Looking for paths containing %s in %s', args.test, data_dir)
+        filenames = ReviewDataset.get_lowest_filenames(data_dir)
+        relevant = [name for name in filenames if args.test.lower() in name.lower()]
+        LOGGER.info('Found:%s', pformat(relevant))
+        reviews = [Review(name) for name in relevant]
+        for r in reviews:
+            [LOGGER.info('%s:%d:%s',r.path,i,p) for i,p in enumerate(r.paras)]
+    else:
+        dataset = ReviewDataset(data_dir)
     return 0
 
 if __name__ == '__main__':
