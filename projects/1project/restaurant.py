@@ -67,8 +67,7 @@ def extract_ngrams(review,
         low = 1, high = 2,
         lowercase = False,
         filter_punctuation = True,
-        normalize = False,
-        wtf = False):
+        normalize = False):
     text = ' '.join(review.paragraphs)
     tokens = None
 
@@ -117,17 +116,17 @@ def exercise4(dataset, runs = 5):
 
         LOGGER.info('Building features...')
         # Build Features
-        test_features  = [(extract_ngrams(r, lowercase = False, normalize = True, wtf = False), r.author) 
+        test_features  = [(extract_ngrams(r, lowercase = False, normalize = False), r.author)
                 for r in test_reviews]
-        train_features = [(extract_ngrams(r, lowercase = False, normalize = True, wtf = False), r.author) 
+        train_features = [(extract_ngrams(r, lowercase = False, normalize = False), r.author)
                 for r in train_reviews]
 
         LOGGER.info('Building classifier...')
         # Build Classifier
         LOGGER.info('Training Examples: %d', len(train_reviews))
         LOGGER.info('Training Features: %d', len(train_features))
-        #classifier = nltk.NaiveBayesClassifier.train(train_features)
-        classifier = nltk.DecisionTreeClassifier.train(train_features)
+        classifier = nltk.NaiveBayesClassifier.train(train_features)
+        #classifier = nltk.DecisionTreeClassifier.train(train_features)
 
         LOGGER.info('Checking accuracy...')
         # Perform Classification
