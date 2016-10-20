@@ -27,6 +27,7 @@ LOGGER.setLevel(logging.WARNING)
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk import ngrams
+from nltk import FreqDist
 from bs4 import BeautifulSoup
 from pprint import pformat
 import re
@@ -62,53 +63,37 @@ def enter_debug_mode():
     LOGGER.setLevel(logging.DEBUG)
 
 PUNCTUATION = set(string.punctuation)
-def extract_ngrams(reviews, low, high, lowercase = False):
-    ngram_counts = defaultdict(int)
+def extract_ngrams(review,
+        low = 1, high = 2,
+        lowercase = False,
+        filter_punctuation = True,
+        normalize = False,
+        wtf = False):
+    text = ' '.join(review.paragraphs)
+    tokens = None
 
-    for review in reviews:
-        text = ' '.join(review.paragraphs)
-        tokens = None
-        if lowercase:
-            tokens = word_tokenize(text.lower())
-        else:
-            tokens = word_tokenize(text)
+    # Make lowercase
+    if lowercase:
+        tokens = word_tokenize(text.lower())
+    else:
+        tokens = word_tokenize(text)
+
+    # Remove Punctuation
+    if filter_punctuation:
         words = [t for t in tokens if t not in PUNCTUATION]
-        for n in range(low, high + 1):
-            all_ngrams = ngrams(words, n)
-            for gram in all_ngrams:
-                ngram_counts[gram] += 1
+    else:
+        words = [t for t in tokens]
+
+    # Do the N Gram Thing
+    ngram_counts = {}
+    for n in range(low, high + 1):
+        ngram_freqdist = FreqDist(ngrams(words, n))
+        for gram in ngram_freqdist:
+            if normalize:
+                ngram_counts[gram] = ngram_freqdist.freq(gram)
+            else:
+                ngram_counts[gram] = ngram_freqdist[gram]
     return ngram_counts
-
-def build_ngram_features(all_author_reviews, smooth = False, normalize = False, lowercase = False):
-    features = []
-    n_low = 1
-    n_high = 3
-    # Extract N Grams
-    for author in all_author_reviews:
-        counts = extract_ngrams(all_author_reviews[author], n_low, n_high)
-        features.append((counts,author))
-    # Simple Laplace Smoothing
-    if smooth:
-        vocab = set()
-        for counts, author in features:
-            vocab.add(word for word in counts)
-        for counts, author in features:
-            for word in vocab:
-                if word not in counts:
-                    counts[word] = 1
-    # Make each count a proportion of all the words of the author
-    if normalize:
-        for counts, author in features:
-            total_words = sum(count for word, count in counts.items())
-            for word in vocab:
-                counts[word] = counts[word] / total_words
-    return features
-
-def build_author_classes(reviews):
-    auth_dict = defaultdict(list)
-    for r in reviews:
-        auth_dict[r.author].append(r)
-    return auth_dict
 
 def exercise4(dataset, runs = 5):
 
@@ -124,28 +109,25 @@ def exercise4(dataset, runs = 5):
             train_reviews = dataset.train
             predetermined = True
         else:
-            test_reviews, train_reviews = dataset.make_test_train(0.25)
+            test_reviews, train_reviews = dataset.make_author_test_train(0.25)
             predetermined = False
         if not predetermined:
             LOGGER.setLevel(logging.INFO)
             LOGGER.info('Run %d of %d', n + 1, runs)
 
-        # Build Classes
-        test_classes  = build_author_classes(test_reviews)
-        train_classes = build_author_classes(train_reviews)
-
         LOGGER.info('Building features...')
-
         # Build Features
-        test_features = build_ngram_features(test_classes, smooth = True, normalize = True, lowercase = True)
-        train_features = build_ngram_features(train_classes, smooth = True, normalize = True, lowercase = True)
+        test_features  = [(extract_ngrams(r, lowercase = False, normalize = True, wtf = False), r.author) 
+                for r in test_reviews]
+        train_features = [(extract_ngrams(r, lowercase = False, normalize = True, wtf = False), r.author) 
+                for r in train_reviews]
 
         LOGGER.info('Building classifier...')
         # Build Classifier
         LOGGER.info('Training Examples: %d', len(train_reviews))
         LOGGER.info('Training Features: %d', len(train_features))
-        classifier = nltk.NaiveBayesClassifier.train(train_features)
-        #classifier = nltk.DecisionTreeClassifier.train(train_features)
+        #classifier = nltk.NaiveBayesClassifier.train(train_features)
+        classifier = nltk.DecisionTreeClassifier.train(train_features)
 
         LOGGER.info('Checking accuracy...')
         # Perform Classification
@@ -161,7 +143,7 @@ def exercise4(dataset, runs = 5):
         for a,c in ([HEADER] + classifications):
             print("Exercise 4: %s %s" % (a.ljust(col_width), c))
         accuracy = nltk.classify.accuracy(classifier, test_features)
-        print("Exercise 4:", accuracy)
+        print("Exercise 4: %.3f" % (accuracy,))
         if predetermined:
             return
         else:

@@ -328,6 +328,8 @@ class Review(object):
         return
     def __str__(self):
         return self.raw
+    def __hash__(self):
+        return self.path.__hash__()
     def fill_properties(self):
         [LOGGER.debug('PARAGRAPH:%d:%s', i, p) for i,p in enumerate(self.all_paras)]
         if len(self.all_paras) != 13:
@@ -420,11 +422,35 @@ class ReviewDataset(object):
         sanitize_reviews(self.all_reviews)
         return
 
-    def make_test_train(self, train_portion):
+    def make_test_train(self, test_portion):
         test = None
         train = None
         shuffled_reviews = self.all_reviews[:]
         random.shuffle(shuffled_reviews)
-        test  = shuffled_reviews[:int(train_portion*len(shuffled_reviews))]
-        train = shuffled_reviews[int(train_portion*len(shuffled_reviews)):]
+        test  = shuffled_reviews[:int(test_portion*len(shuffled_reviews))]
+        train = shuffled_reviews[int(test_portion*len(shuffled_reviews)):]
+        return test, train
+    def make_author_test_train(self, test_portion):
+        test = None
+        train = None
+        author_reviews = defaultdict(list)
+        for r in self.all_reviews:
+            author_reviews[r.author].append(r)
+        for author, reviews in author_reviews.items():
+            random.shuffle(reviews)
+        train = []
+        max_train_num = int((1 - test_portion) * len(self.all_reviews))
+        author_list = [author for author in author_reviews]
+        random.shuffle(author_list)
+        for random_author in author_list:
+            if len(train) < max_train_num:
+                train.append(author_reviews[random_author].pop())
+            else:
+                break;
+        remaining_reviews = []
+        [remaining_reviews.extend(reviews) for author, reviews in author_reviews.items()]
+        random.shuffle(remaining_reviews)
+        while len(train) < max_train_num:
+            train.append(remaining_reviews.pop())
+        test = remaining_reviews
         return test, train
