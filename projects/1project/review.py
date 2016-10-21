@@ -410,10 +410,17 @@ class ReviewDataset(object):
             self.reviews[folder] = new_reviews
 
         # Build Test and Training Sets
-        if all(x in self.reviews for x in (TEST_DIR, TRAIN_DIR)):
+        test_dir_full = None
+        train_dir_full = None
+        for x in self.reviews:
+            if TEST_DIR in x:
+                test_dir_full = x
+            if TRAIN_DIR in x:
+                train_dir_full = x
+        if test_dir_full and train_dir_full:
             self.predetermined = True
-            self.test = self.reviews[TEST_DIR]
-            self.train = self.reviews[TRAIN_DIR]
+            self.test = self.reviews[test_dir_full]
+            self.train = self.reviews[train_dir_full]
         else:
             self.test = None
             self.train = None
@@ -453,4 +460,29 @@ class ReviewDataset(object):
         while len(train) < max_train_num:
             train.append(remaining_reviews.pop())
         test = remaining_reviews
+        return test, train
+    def make_binary_test_train(self, test_portion):
+        test = None
+        train = None
+        good_reviews = []
+        bad_reviews = []
+        for review in self.all_reviews:
+            if review.ratings[OVERALL_NDX] >= 4:
+                good_reviews.append(review)
+            else:
+                bad_reviews.append(review)
+        random.shuffle(good_reviews)
+        random.shuffle(bad_reviews)
+        # Get at least one of each
+        test.append(good_reviews.pop())
+        test.append(bad_reviews.pop())
+
+        remaining_reviews = good_reviews + bad_reviews
+        random.shuffle(remaining_reviews)
+
+        # Add to training until we reach the required amount
+        max_train_num = int((1 - test_portion) * len(self.all_reviews))
+        while len(train) < max_train_num:
+            train.append(remaining_reviews)
+        test.extend(remaining_reviews)
         return test, train
