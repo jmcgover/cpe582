@@ -1,0 +1,21 @@
+Name: Jeff McGovern
+Paper: Tsvetkov, Yulia, et al. "Metaphor detection with cross-lingual model transfer." (2014).
+1. What is the problem the authors are trying to solve?
+Metaphor detection in text. The ability to discriminate between a literal and a metaphorical syntactic construction.
+2. What other approaches or solutions existed at the time that this work was done?
+Previous work has been done building linguistic resources to aid in the detection of metaphors. Other previous work was done using corpus based approaches of detecting metaphorical text.
+3. What was wrong with the other approaches or solutions?
+The previous work is done exclusively in English and has no explicit way to convert the understanding they garner into another language. Previous work also doesn't appear to contribute to the hypothesis that metaphors are conceptual rather than lexical.
+4. What is the authors' approach or solution?
+The researchers chose to focus on discrinimating metaphors in two syntactic structures --- subject-verb-object and adjective-noun --- using coarse-grained conceptual features. They define three main feature categories --- abstractness and imageability, supersenses, and vector word space representations. For the first, they classify abstract-concreteness and imageability-unimageability using two different classifiers (apparently random forests). For supersenses of nouns and verbs, the features extracted from the ratio of how many synsets are related to the supersense to how many synsets the word is in. With Adjectives, the researchers utilize 13 top-level classes from a particular taxonomy and the feature vector is extracted from its membership in synsets. And finally, using a corpus of news commentary, they researchers trained 64 elemtn long vectors to produce word vectors such that synonymous words have similar vectors.
+5. Why is it better than the other approaches or solutions?
+
+6. How did they test their solution?
+Researchers performed 10-fold cross validation on a corpus of metaphors selected by annotators, experimenting with different combinations of features to observe how the accuracy changes. They tested it on out of domain data, investingating precision, recall,  and area under the ROC curve. They also used Tsvetkov et al. softwre to classify SVO and AN relations in English and Russian using their featureset adn classification strategy. Lastly, using all available features, they 
+7. How does it perform?
+It seems to beat all the other similar work, including some state of the art stuff. It also works similarly well in four different languages, which is a promising feat.
+8. Why is this work important?
+3+ comments/questions
+  * Where did they get these sentences from for the multilingual datasets?
+  * Metaphors make up 5-20% of communication, but how many of those metaphors are SVO and AN?
+  * What are the direct applications of this?
