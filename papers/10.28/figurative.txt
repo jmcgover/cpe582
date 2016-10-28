@@ -1,0 +1,22 @@
+Name: Jeff McGovern
+Paper: Gagliano, Andrea, et al. "Intersecting Word Vectors to Take Figurative Language to New Heights." on Computational Linguistics for Literature (2016): 20.
+1. What is the problem the authors are trying to solve?
+Metaphors are a deeply conceptual feature of poetry that is crucial to making interesting poetry.
+2. What other approaches or solutions existed at the time that this work was done?
+Lakoff and Turner 1989 discusses the core concept of this paper in that metaphors can be thought of as the linking of a noun to a poetic theme. Veale and Hao (2007) tried building figurative language by mining Google search results for adjectives used to describe both terms, while Vealr and Hao (2008) mined WordNet to find similar words. Schutze (1993) attempted to represent the meaning of concepts with n-dimensional word spaces.
+3. What was wrong with the other approaches or solutions?
+They don't specifically address metahpors, but simply represent conceptual features of words. Many are simply surveys of figurative language. Others don't allow for a generative model of figurative language.
+4. What is the authors' approach or solution?
+Using word2vec to find words similar to a noun and a poetic theme, they investigate an addition model and an intersection model to link the two together. Poetic concepts are mined from poetseers and concrete nouns come from poems loaded fro mthe 19th century american poetry section of famouspoetsandpoems.com. The addition model come s from finding the most simlar words to the anchor words(the concrete noun, poetic concept) pair by using hte word2vec vector addition approahc. Cosine similarity defines the similarity of the resulting word vector to the potential word in order to build a set of similar words. The intersection model looks at the 1000 most similar words to each and builds the set by taking the intersection of the two lists.  
+5. Why is it better than the other approaches or solutions?
+It actually attempts to build a concept of metaphors put forth in Lakoff and Turner 1998.
+6. How did they test their solution?
+Using the word2vec corpus pruned.word2vec.txt and poems from famouspoetsandpoems.com, the authors tested their solution with a depth of 1000 for each word list, investigating the difference between the intesection list and the additive list, and vice versa. They observed the range of similarity scores and assessed the quality of the words towards supporting figurative language.
+7. How does it perform?
+It's clear that the additive model retrieves primarily synonyms and using any words exclusively from that set is troublesome. They tehn built a crowd sourced list of figurative relationships using Mechanical Turk and the words unique to the intersection and addition sets separately.
+8. Why is this work important?
+It appears that the most interesting figurative language comes from not-so-synonymous relationships, where both words aren't very synonymous in their semantic relatedness.
+3+ comments/questions
+  * Why didn't they use a bigger dataset?
+  * What sort of evaluation will they be using for their future work?
+  * Is there a gold standard quantitative way to judge synonimy? 

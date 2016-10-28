@@ -1,0 +1,21 @@
+Name: Jeff McGovern
+Paper: Sultan, Md Arafat, Jordan Boyd-Graber, and Tamara Sumner. "Bayesian Supervised Domain Adaptation for Short Text Similarity}." North American Association for Computational Linguistics}.
+1. What is the problem the authors are trying to solve?
+The authors are investigating methods of short text similarity (STS), which aims to determine how semantically related two small pieces of text are, be they text summarization, machine translation, or student answers on a test. unfortunately, similarity across domain varies. and they want to sue domain adaptation (DA) to transfer information from these disparate STS domains. These have applications in short answer scoring (SAS) and answer sentence ranking (ASR)
+2. What other approaches or solutions existed at the time that this work was done?
+Previous approaches are supervised. 
+3. What was wrong with the other approaches or solutions?
+Previous approaches do not translate well across domains.
+4. What is the authors' approach or solution?
+Given two short texts, the authors want to return a real-valued semantic similarity score. They use Bayesian L_2-regularized linear regression for STSS and SAS and logistic regression for ASR. For the Bayesian adaption framework, they adopt the feature set of the ridge regression model in Sultan et. al (2015). 
+5. Why is it better than the other approaches or solutions?
+6. How did they test their solution?
+Using the SemEval 2012-2015 corpora, consisting of 14,000 annotated sentence pairs, they select ten dataset from ten different domains. For SAS they compare student answer to a gold standard. For ASR, they rank the similarity fo candidate answers to the actual answer, where factoid questions are garnered from Wang et. al (2007). 
+7. How does it perform?
+It appears to perform better than baseline in most cases, with worst case across domain-specific problems remaining higher than previous work.
+8. Why is this work important?
+This works towards a more computational approach to finding semantic similarity between text. It could give us a better way to grade papers computationally in the future, if we are able to use this to discriminates between short text answers semantically. 
+3+ comments/questions
+  * How do they define ``few'' in-domain citations?
+  * How do the annotations work in the dataset? Is there a standard format?
+  * What domains were they using?
