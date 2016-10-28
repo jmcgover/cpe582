@@ -1,0 +1,22 @@
+Name: Jeff McGovern
+Paper: Upadhyay, Shyam, Christos Christodoulopoulos, and Dan Roth. "“Making the News”: Identifying Noteworthy Events in News Articles."
+1. What is the problem the authors are trying to solve?
+THe authors are trying to identify noteworthy events in news articles. Specifically, they are trying to identify _foreground_ articles, which differ from _background_ articles in that they are the event that happened, not the background event (as far as I can tell --- the authors haven't defined noteworthiness).
+2. What other approaches or solutions existed at the time that this work was done?
+Various aspects of this concept have solutions to it. Some solutions exist for cross-document event coreference, where multiple documents are compared and the similar event is extracted. For First Story Detection (FSD), researchers have used a similarity measure with an inverted index to find the first story on an event. Event linking attempts to link an event mentioned in an article in a news archive to the article that first reported it. Document Summarization is a subtask that will hopefully be solved by the tool the researchers are creating in this paper.
+3. What was wrong with the other approaches or solutions?
+The FSD solution does not account for multiple event occurring in the same article, instead treating the whole article as a single event.
+4. What is the authors' approach or solution?
+The authors define events as sentence-level relations and entities are extracted via syntactic and lexical constraints.
+5. Why is it better than the other approaches or solutions?
+The authors don't make it clear why their approach is better. There may be more focus on the news-peg concept that's mentioned throughout that makes it a better algorithm than the others.
+6. How did they test their solution?
+Researchers used the New York Times annotated corpus for all of their experiments. They annotated 100 random articles to see how the news-peg identifier performed.
+7. How does it perform?
+Their baselines seem entirely arbitrary and without justification, but their rule-based classifier performs better than some of them.
+8. Why is this work important?
+Extracting the actual that an article is talking about can be important to tracking news stories as they evolve and progress.
+3+ comments/questions
+  * What is noteworthiness, actually?
+  * Did this paper introduce news-peg identification? Or is it just introducing it to the Computer Science community?
+  * Who calls F1 score values ``points''? It's geometric mean of two proportions.

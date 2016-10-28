@@ -1,0 +1,21 @@
+Name: Jeff McGovern
+Paper: Jiang, Ridong, Rafael E. Banchs, and Haizhou Li. "Evaluating and Combining Named Entity Recognition Systems." ACL 2016 (2016): 21.
+1. What is the problem the authors are trying to solve?
+Named recognition recognition is an important subtask of NLP. Programmatic understanding of entities in text can help disambiguate and retrieve information.
+2. What other approaches or solutions existed at the time that this work was done?
+MAny others exists. Stanford NER, spaCy, Alias-i LingPipe NER, and NLTK are all implementations with varying levels of documentation. 
+3. What was wrong with the other approaches or solutions?
+They don't work together to build a tool larger than itself.
+4. What is the authors' approach or solution?
+Evaluate the a-four-mentioned tools and use the ones that perform the best.
+5. Why is it better than the other approaches or solutions?
+Because the ones they use are built by separate teams, they don't combine the results of each and pick the best one.
+6. How did they test their solution?
+They evaluated precision, recall, and F measure on a dataset of Singapore National Library eResources.
+7. How does it perform?
+It's unclear what is performing here. It appears to just be using two of the best methods to perform NER after evaluation determined they were the best, generally.
+8. Why is this work important?
+3+ comments/questions
+  * How does spaCy work?
+  * How is this not just a glorified review of the precision, recall, and f-measure of the tools? What 
+  * Was this paper written in Word?
